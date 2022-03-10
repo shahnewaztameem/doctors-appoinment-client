@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import useAuth from '../../../hooks/useAuth'
 import Navbar from '../../Shared/Navbar/Navbar'
 
 const Signup = () => {
   const [loginInfo, setLoginInfo] = useState({})
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
+
+  const { user, registerUser, loading, userError } = useAuth()
 
   // handle login input
   const handleOnChange = (e) => {
@@ -23,7 +27,9 @@ const Signup = () => {
     if (loginInfo.password !== loginInfo.password2) {
       setConfirmPasswordError('Password does not match')
     }
-    
+
+    // registering user
+    registerUser(loginInfo.email, loginInfo.password)
     e.preventDefault()
   }
   return (
@@ -34,6 +40,11 @@ const Signup = () => {
         <div className='row'>
           <div className='col-md-6 offset-md-3'>
             <h2 className='text-center'>Signup</h2>
+            {userError && (
+              <div class='alert alert-danger'>
+                <strong>{userError}</strong>
+              </div>
+            )}
             <form onSubmit={handleLoginSubmit}>
               <div class='form-group'>
                 <label className='mb-1'>Email address</label>
@@ -68,9 +79,16 @@ const Signup = () => {
               </div>
               <div>{confirmPasswordError}</div>
 
-              <button type='submit' class='btn btn-primary mt-3'>
-                Submit
-              </button>
+              {loading ? (
+                <button class='btn btn-primary mt-3'>
+                  <Spinner animation='border' size='sm' />
+                </button>
+              ) : (
+                <button type='submit' class='btn btn-primary mt-3'>
+                  {' '}
+                  Submit
+                </button>
+              )}
             </form>
             <div>
               <p>

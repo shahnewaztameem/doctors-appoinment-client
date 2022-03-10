@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import useAuth from '../../../hooks/useAuth'
+
 const Navbar = () => {
+  const { user, logout } = useAuth()
+
   return (
     <div>
       <nav className='navbar navbar-expand-lg navbar-light'>
@@ -21,7 +25,7 @@ const Navbar = () => {
         <div className='collapse navbar-collapse' id='navbarNav'>
           <ul className='navbar-nav ms-auto'>
             <li className='nav-item active'>
-              <Link className='nav-link' to="/">
+              <Link className='nav-link' to='/'>
                 Home
               </Link>
             </li>
@@ -30,15 +34,17 @@ const Navbar = () => {
                 Appoinment
               </Link>
             </li>
+
             <li className='nav-item'>
-              <Link className='nav-link' to='/login'>
-                Login
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link className='nav-link' to='/signup'>
-                Signup
-              </Link>
+              {user?.email ? (
+                <button onClick={logout} className='nav-link'>
+                  Logout
+                </button>
+              ) : (
+                <Link className='nav-link' to='/login'>
+                    Login
+                  </Link>
+              )}
             </li>
           </ul>
         </div>
