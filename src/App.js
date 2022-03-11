@@ -3,6 +3,7 @@ import AuthProvider from './context/AuthProvider/AuthProvider'
 import Appoinment from './Screens/Appoinment/Appoinment/Appoinment'
 import Home from './Screens/Home/Home'
 import Login from './Screens/Login/Login/Login'
+import PrivateRoute from './Screens/Login/PrivateRoute/PrivateRoute'
 import Signup from './Screens/Login/Signup/Signup'
 function App() {
   return (
@@ -10,9 +11,9 @@ function App() {
       <AuthProvider>
         <Router>
           <Switch>
-            <Route path='/appoinment'>
+            <PrivateRoute path='/appoinment'>
               <Appoinment />
-            </Route>
+            </PrivateRoute>
             <Route path='/login'>
               <Login />
             </Route>

@@ -42,8 +42,8 @@ const Navbar = () => {
                 </button>
               ) : (
                 <Link className='nav-link' to='/login'>
-                    Login
-                  </Link>
+                  Login
+                </Link>
               )}
             </li>
           </ul>
