@@ -2,7 +2,10 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
   onAuthStateChanged,
+  updateProfile,
   signOut,
 } from 'firebase/auth'
 import { useEffect, useState } from 'react'
@@ -16,6 +19,9 @@ const useFirebase = () => {
   const [userError, setUserError] = useState('')
 
   const auth = getAuth()
+
+  // google auth
+  const googleAuthProvider = new GoogleAuthProvider()
 
   // check user state
   useEffect(() => {
@@ -32,13 +38,29 @@ const useFirebase = () => {
   }, [])
 
   // signup user
-  const registerUser = (email, password) => {
+  const registerUser = (email, password, name, history) => {
     setLoading(true)
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        
         const user = userCredential.user
         setUserError('')
+
+        const createdUser = { email, displayName: name }
+        setUser(createdUser)
+
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        })
+          .then(() => {
+            // Profile updated!
+            // ...
+          })
+          .catch((error) => {
+            // An error occurred
+            // ...
+          })
+
+        history.replace('/')
       })
       .catch((error) => {
         const errorCode = error.code
@@ -50,6 +72,28 @@ const useFirebase = () => {
       .finally(() => setLoading(false))
   }
 
+  // login with google
+  const googleSignIn = (location, history) => {
+    setLoading(true)
+
+    signInWithPopup(auth, googleAuthProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result)
+        const token = credential.accessToken
+        // The signed-in user info.
+        const user = result.user
+        setUserError('')
+      })
+      .catch((error) => {
+        const errorMessage = error.message
+
+        setUserError(errorMessage)
+      })
+      .finally(() => setLoading(false))
+      history.replace('/')
+  }
+
   // login user
   const loginUser = (email, password, location, history) => {
     setLoading(true)
@@ -57,7 +101,7 @@ const useFirebase = () => {
       .then((userCredential) => {
         const destination = location?.state?.from || '/'
         history.replace(destination)
-        
+
         const user = userCredential.user
         setUserError('')
       })
@@ -85,6 +129,7 @@ const useFirebase = () => {
     user,
     loading,
     userError,
+    googleSignIn,
     registerUser,
     loginUser,
     logout,
