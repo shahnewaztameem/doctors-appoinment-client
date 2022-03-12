@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Booking from '../Booking/Booking'
 
 const appoinmentsData = [
@@ -41,10 +41,12 @@ const appoinmentsData = [
 ]
 
 const AvailableAppoinments = ({ date }) => {
+  const [bookingSuccess, setBookingSuccess] = useState(false)
   return (
     <>
       <div className='row mt-5'>
         <div className='col-md-12'>
+          <h3>{bookingSuccess && 'Success'}</h3>
           <h2 className='text-center'>
             Available appoinments on {date.toDateString()}
           </h2>
@@ -52,10 +54,15 @@ const AvailableAppoinments = ({ date }) => {
       </div>
 
       <div className='row'>
-        {appoinmentsData.map(
-          (appoinmentData) =>
-            <Booking name={appoinmentData.name} time={appoinmentData.time} isAvailable={appoinmentData.isAvailable} date={date}/>
-        )}
+        {appoinmentsData.map((appoinmentData) => (
+          <Booking
+            name={appoinmentData.name}
+            time={appoinmentData.time}
+            isAvailable={appoinmentData.isAvailable}
+            date={date}
+            setBookingSuccess={setBookingSuccess}
+          />
+        ))}
       </div>
     </>
   )

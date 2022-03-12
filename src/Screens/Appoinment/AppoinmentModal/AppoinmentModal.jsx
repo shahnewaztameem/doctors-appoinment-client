@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import useAuth from '../../../hooks/useAuth'
+import axios from 'axios'
 
 const AppoinmentModal = (props) => {
-  const { name, time, date, onHide } = props
+  const { name, time, date, onHide, setBookingSuccess } = props
   const { user } = useAuth()
 
   const initialInfo = {
@@ -12,16 +13,14 @@ const AppoinmentModal = (props) => {
     phone: '',
   }
   const [appoinmentInfo, setAppoinmentInfo] = useState(initialInfo)
-  
 
   const handleChange = (e) => {
     const field = e.target.name
     const value = e.target.value
 
-    const newAppoinmentInfo = {...appoinmentInfo}
+    const newAppoinmentInfo = { ...appoinmentInfo }
     newAppoinmentInfo[field] = value
 
-    console.log(newAppoinmentInfo);
     setAppoinmentInfo(newAppoinmentInfo)
   }
 
@@ -29,11 +28,39 @@ const AppoinmentModal = (props) => {
     e.preventDefault()
     const appoinment = {
       ...appoinmentInfo,
-      name,
-      time
+      serviceName: name,
+      time,
+      date: date.toLocaleDateString(),
     }
-    
-    onHide()
+    // console.log(appoinment)
+
+    createAppoinment(appoinment)
+    setBookingSuccess(false)
+  }
+
+  //send data to backend
+  const createAppoinment = async (appoinmentData) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+      const { data } = await axios.post(
+        'http://localhost:5000/api/appoinments',
+        appoinmentData,
+        config
+      )
+
+      if (data._id) {
+        setBookingSuccess(true)
+        onHide()
+      }
+
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
   return (
     <Modal

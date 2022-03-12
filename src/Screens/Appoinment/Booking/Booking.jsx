@@ -1,7 +1,7 @@
 import React from 'react'
 import AppoinmentModal from '../AppoinmentModal/AppoinmentModal'
 
-const Booking = ({ name, time, isAvailable, date }) => {
+const Booking = ({ name, time, isAvailable, date, setBookingSuccess }) => {
   const [modalShow, setModalShow] = React.useState(false)
 
   return (
@@ -22,6 +22,7 @@ const Booking = ({ name, time, isAvailable, date }) => {
         time={time}
         date={date}
         show={modalShow}
+        setBookingSuccess={setBookingSuccess}
         onHide={() => setModalShow(false)}
       />
     </>
