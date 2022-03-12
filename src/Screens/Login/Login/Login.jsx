@@ -6,7 +6,7 @@ import useAuth from '../../../hooks/useAuth'
 import Navbar from '../../Shared/Navbar/Navbar'
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({})
-  const { user, loginUser, loading, userError } = useAuth()
+  const { user, loginUser, loading, userError, googleSignIn } = useAuth()
 
   // handle login input
   const handleOnChange = (e) => {
@@ -16,6 +16,11 @@ const Login = () => {
     const newLoginData = { ...loginInfo }
     newLoginData[field] = value
     setLoginInfo(newLoginData)
+  }
+
+  // google signin
+  const handleGoogleSignin = () => {
+    googleSignIn(location, history)
   }
 
   // handle login submit
@@ -74,6 +79,7 @@ const Login = () => {
                 </button>
               )}
             </form>
+            <button className='btn btn-primary btn-block mt-5' onClick={handleGoogleSignin}>Signin with Google</button>
             <div>
               <p>
                 Don't have account? <Link to='/signup'>Signup here</Link>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import useAuth from '../../../hooks/useAuth'
 import Navbar from '../../Shared/Navbar/Navbar'
 
@@ -9,6 +10,8 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
 
   const { user, registerUser, loading, userError } = useAuth()
+
+  const history = useHistory()
 
   // handle login input
   const handleOnChange = (e) => {
@@ -29,7 +32,7 @@ const Signup = () => {
     }
 
     // registering user
-    registerUser(loginInfo.email, loginInfo.password)
+    registerUser(loginInfo.email, loginInfo.password, loginInfo.name, history)
     e.preventDefault()
   }
   return (
@@ -46,6 +49,16 @@ const Signup = () => {
               </div>
             )}
             <form onSubmit={handleLoginSubmit}>
+              <div class='form-group'>
+                <label className='mb-1'>Name</label>
+                <input
+                  type='text'
+                  class='form-control mb-2'
+                  name='name'
+                  onChange={handleOnChange}
+                  placeholder='Enter your name'
+                />
+              </div>
               <div class='form-group'>
                 <label className='mb-1'>Email address</label>
                 <input
