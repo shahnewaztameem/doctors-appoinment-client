@@ -6,13 +6,13 @@ const Booking = ({ name, time, isAvailable, date, setBookingSuccess }) => {
 
   return (
     <>
-      {isAvailable && (
+      {isAvailable.toLowerCase() === 'active' && (
         <div className='col-md-4'>
-          <div class='card mb-4 text-center'>
+          <div class='card mb-4 text-center shadow rounded'>
             <div class='card-body'>
               <h5 class='card-title'>{name}</h5>
               <p class='card-text'>{time}</p>
-              <button onClick={() => setModalShow(true)}>Get Appoinment</button>
+              <button onClick={() => setModalShow(true)} className="btn btn-primary">Get Appoinment</button>
             </div>
           </div>
         </div>

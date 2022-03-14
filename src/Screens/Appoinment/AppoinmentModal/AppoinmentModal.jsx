@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import useAuth from '../../../hooks/useAuth'
 import axios from 'axios'
+import emailjs from 'emailjs-com'
 
 const AppoinmentModal = (props) => {
   const { name, time, date, onHide, setBookingSuccess } = props
   const { user } = useAuth()
-
+  const form = useRef()
   const initialInfo = {
     patientName: user.displayName,
     email: user.email,
@@ -35,6 +36,26 @@ const AppoinmentModal = (props) => {
     // console.log(appoinment)
 
     createAppoinment(appoinment)
+
+    //email
+
+    emailjs
+      .sendForm(
+        'service_uvv9urc',
+        'template_appoinment',
+        form.current,
+        '7zmd-LRBIoYDbR_QH'
+      )
+      .then(
+        (result) => {
+          console.log(result.text)
+        },
+        (error) => {
+          console.log(error.text)
+        }
+      )
+
+
     setBookingSuccess(false)
   }
 
@@ -78,7 +99,25 @@ const AppoinmentModal = (props) => {
         <h4>Service name: {name}</h4>
         <p>Time: {time}</p>
 
-        <form onSubmit={handleSubmitBooking}>
+        <form ref={form} onSubmit={handleSubmitBooking}>
+          <div class='form-group'>
+            <input
+              type='text'
+              className='mb-2 form-control'
+              name='servicename'
+              defaultValue={name}
+              hidden
+            />
+          </div>
+          <div class='form-group'>
+            <input
+              type='text'
+              className='mb-2 form-control'
+              name='time'
+              defaultValue={time}
+              hidden
+            />
+          </div>
           <div class='form-group'>
             <input
               type='text'
@@ -103,20 +142,18 @@ const AppoinmentModal = (props) => {
             <input
               type='email'
               className='mb-2 form-control'
-              name='patientName'
+              name='email'
               defaultValue={user.email}
               onBlur={handleChange}
             />
           </div>
 
-          <button type='submit' className='mt-4'>
+          <button type='submit' className='mt-4 btn btn-primary'>
             Confirm Appoinment
           </button>
         </form>
       </Modal.Body>
-      <Modal.Footer>
-        <button onClick={onHide}>Close</button>
-      </Modal.Footer>
+    
     </Modal>
   )
 }

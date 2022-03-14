@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../hooks/useAuth'
 
-const Appoinments = () => {
+const Appoinments = ({ date }) => {
   const { user } = useAuth()
   const [appoinments, setAppoinments] = useState([])
 
@@ -16,9 +16,9 @@ const Appoinments = () => {
         console.log(data)
       } catch (error) {}
     }
-
+    
     fetchAppoinmentsByEmail()
-  }, [user.email])
+  }, [])
 
   return (
     <div>

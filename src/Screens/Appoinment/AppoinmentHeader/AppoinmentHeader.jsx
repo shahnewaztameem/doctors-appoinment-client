@@ -10,7 +10,7 @@ const AppoinmentHeader = ({date, setDate}) => {
   return (
     <div className='container'>
       <div className='row'>
-        <div className='col-md-6'>
+        <div className='col-md-6 d-flex align-items-center'>
           <AppoinmentCalendar
             setDate={setDate}
             value={date}

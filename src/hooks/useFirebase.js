@@ -6,18 +6,22 @@ import {
   signInWithPopup,
   onAuthStateChanged,
   updateProfile,
+  getIdToken,
   signOut,
 } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import initializeFirebase from '../Screens/Login/Login/firebase/firebase.init'
+import axios from 'axios'
+import { async } from '@firebase/util'
 
 initializeFirebase()
 
 const useFirebase = () => {
   const [user, setUser] = useState({})
+  const [admin, setAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   const [userError, setUserError] = useState('')
-
+  const [token, setToken] = useState('')
   const auth = getAuth()
 
   // google auth
@@ -29,6 +33,13 @@ const useFirebase = () => {
       if (user) {
         const uid = user.uid
         setUser(user)
+        getIdToken(user)
+        .then(idToken => {
+          
+          setToken(idToken)
+          localStorage.setItem('token', idToken)
+
+        })
       } else {
         setUser({})
       }
@@ -36,6 +47,59 @@ const useFirebase = () => {
     })
     return () => unsubscribe
   }, [])
+
+  useEffect(() => {
+    const getUser = async () => {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+      const { data } = await axios.get(
+        `http://localhost:5000/api/users/${user.email}`,
+        user,
+        config
+      )
+      setAdmin(data.admin)
+    }
+    getUser()
+  }, [user.email])
+
+  
+
+  // save user to db
+
+  const saveUserToDb = async (email, displayName, methodType) => {
+    const user = { email, displayName }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+
+    if (methodType.toLowerCase() === 'post') {
+      const { data } = await axios.post(
+        'http://localhost:5000/api/users',
+        {
+          email,
+          displayName,
+        },
+        config
+      )
+    }
+
+    if (methodType.toLowerCase() === 'put') {
+      const { data } = await axios.put(
+        'http://localhost:5000/api/users',
+        {
+          email,
+          displayName,
+        },
+        config
+      )
+    }
+  }
 
   // signup user
   const registerUser = (email, password, name, history) => {
@@ -47,6 +111,9 @@ const useFirebase = () => {
 
         const createdUser = { email, displayName: name }
         setUser(createdUser)
+
+        // save user to db
+        saveUserToDb(email, name, 'POST')
 
         updateProfile(auth.currentUser, {
           displayName: name,
@@ -83,7 +150,11 @@ const useFirebase = () => {
         const token = credential.accessToken
         // The signed-in user info.
         const user = result.user
+
+        saveUserToDb(user.email, user.displayName, 'PUT')
         setUserError('')
+        const destination = location?.state?.from || '/'
+        history.replace(destination)
       })
       .catch((error) => {
         const errorMessage = error.message
@@ -91,7 +162,6 @@ const useFirebase = () => {
         setUserError(errorMessage)
       })
       .finally(() => setLoading(false))
-      history.replace('/')
   }
 
   // login user
@@ -127,7 +197,9 @@ const useFirebase = () => {
 
   return {
     user,
+    admin,
     loading,
+    token,
     userError,
     googleSignIn,
     registerUser,

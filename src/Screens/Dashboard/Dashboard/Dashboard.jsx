@@ -1,72 +1,75 @@
 import React, { useState } from 'react'
 import './Dashboard.css'
 import useAuth from '../../../hooks/useAuth'
-import Calendar from 'react-calendar'
-import Appoinments from '../Appoinments/Appoinments'
-import AppoinmentCalendar from '../../Shared/AppoinmentCalendar/AppoinmentCalendar'
+import { Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom'
+import DashboardHome from '../DashboardHome/DashboardHome'
+import MakeAdmin from '../MakeAdmin/MakeAdmin'
+import AddBookingSchedule from '../AddBookingSchedule/AddBookingSchedule'
+import AdminRoute from '../../Login/AdminRoute/AdminRoute'
 
 const Dashboard = () => {
-  const [date, setDate] = useState(new Date())
+  let { path, url } = useRouteMatch()
 
-  const { user } = useAuth()
+  const { user, admin } = useAuth()
   return (
     <div id='wrapper'>
       <ul
         class='navbar-nav bg-gradient-primary sidebar sidebar-dark accordion'
         id='accordionSidebar'
       >
-        <a
+        <Link
           class='sidebar-brand d-flex align-items-center justify-content-center'
-          href='index.html'
+          to='/dashboard'
         >
           <div class='sidebar-brand-icon rotate-n-15'>
             <i class='fas fa-laugh-wink'></i>
           </div>
           <div class='sidebar-brand-text mx-3'>Doctor's Appoinment</div>
-        </a>
+        </Link>
 
         <hr class='sidebar-divider my-0' />
 
         <li class='nav-item active'>
-          <a class='nav-link' href='index.html'>
+          <Link to={`${url}`} class='nav-link'>
             <i class='fas fa-fw fa-tachometer-alt'></i>
             <span>Dashboard</span>
-          </a>
+          </Link>
+        </li>
+        {admin && (
+          <>
+            <li class='nav-item active'>
+              <Link to={`${url}/make-admin`} class='nav-link'>
+                <i class='fas fa-fw fa-tachometer-alt'></i>
+                <span>Make user Admin</span>
+              </Link>
+            </li>
+            <li class='nav-item active'>
+              <Link to={`${url}/add-schedule`} class='nav-link'>
+                <i class='fas fa-fw fa-tachometer-alt'></i>
+                <span>Add Schedule</span>
+              </Link>
+            </li>
+          </>
+        )}
+        <li class='nav-item active'>
+          <Link to='/appoinment' class='nav-link'>
+            <i class='fas fa-fw fa-tachometer-alt'></i>
+            <span>Get an appoinment</span>
+          </Link>
         </li>
 
-        <hr class='sidebar-divider' />
+       
 
-        <div class='sidebar-heading'>Interface</div>
+       
 
-        <li class='nav-item'>
-          <a
-            class='nav-link collapsed'
-            href='#'
-            data-toggle='collapse'
-            data-target='#collapseTwo'
-            aria-expanded='true'
-            aria-controls='collapseTwo'
-          >
-            <i class='fas fa-fw fa-cog'></i>
-            <span>Components</span>
-          </a>
-          <div
-            id='collapseTwo'
-            class='collapse'
-            aria-labelledby='headingTwo'
-            data-parent='#accordionSidebar'
-          >
-            <div class='bg-white py-2 collapse-inner rounded'>
-              <h6 class='collapse-header'>Custom Components:</h6>
-              <a class='collapse-item' href='buttons.html'>
-                Buttons
-              </a>
-              <a class='collapse-item' href='cards.html'>
-                Cards
-              </a>
-            </div>
-          </div>
-        </li>
+        
       </ul>
 
       <div id='content-wrapper' class='d-flex flex-column'>
@@ -95,78 +98,18 @@ const Dashboard = () => {
               <h1 class='h3 mb-0 text-gray-800'>Dashboard</h1>
             </div>
 
-            <div class='row'>
-              <div class='col-xl-4 col-md-6 mb-4'>
-                <div class='card border-left-primary shadow h-100 py-2'>
-                  <div class='card-body'>
-                    <div class='row no-gutters align-items-center'>
-                      <div class='col mr-2'>
-                        <div class='text-xs font-weight-bold text-primary text-uppercase mb-1'>
-                          Earnings (Monthly)
-                        </div>
-                        <div class='h5 mb-0 font-weight-bold text-gray-800'>
-                          $40,000
-                        </div>
-                      </div>
-                      <div class='col-auto'>
-                        <i class='fas fa-calendar fa-2x text-gray-300'></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class='col-xl-4 col-md-6 mb-4'>
-                <div class='card border-left-success shadow h-100 py-2'>
-                  <div class='card-body'>
-                    <div class='row no-gutters align-items-center'>
-                      <div class='col mr-2'>
-                        <div class='text-xs font-weight-bold text-success text-uppercase mb-1'>
-                          Earnings (Annual)
-                        </div>
-                        <div class='h5 mb-0 font-weight-bold text-gray-800'>
-                          $215,000
-                        </div>
-                      </div>
-                      <div class='col-auto'>
-                        <i class='fas fa-dollar-sign fa-2x text-gray-300'></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class='col-xl-4 col-md-6 mb-4'>
-                <div class='card border-left-warning shadow h-100 py-2'>
-                  <div class='card-body'>
-                    <div class='row no-gutters align-items-center'>
-                      <div class='col mr-2'>
-                        <div class='text-xs font-weight-bold text-warning text-uppercase mb-1'>
-                          Pending Requests
-                        </div>
-                        <div class='h5 mb-0 font-weight-bold text-gray-800'>
-                          18
-                        </div>
-                      </div>
-                      <div class='col-auto'>
-                        <i class='fas fa-comments fa-2x text-gray-300'></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className='row'>
-              <div className='col-md-4'>
-                <div className='w-100'>
-                  <AppoinmentCalendar setDate={setDate} value={date} />
-                </div>
-              </div>
-              <div className='col-md-8'>
-                <Appoinments />
-              </div>
-            </div>
+            
+            <Switch>
+              <Route exact path={path}>
+                <DashboardHome />
+              </Route>
+              <AdminRoute path={`${path}/make-admin`}>
+                <MakeAdmin />
+              </AdminRoute>
+              <AdminRoute path={`${path}/add-schedule`}>
+                <AddBookingSchedule />
+              </AdminRoute>
+            </Switch>
           </div>
         </div>
 

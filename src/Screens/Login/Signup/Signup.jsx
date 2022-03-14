@@ -27,13 +27,14 @@ const Signup = () => {
 
   // handle login submit
   const handleLoginSubmit = (e) => {
+    e.preventDefault()
     if (loginInfo.password !== loginInfo.password2) {
       setConfirmPasswordError('Password does not match')
+      return
     }
 
     // registering user
     registerUser(loginInfo.email, loginInfo.password, loginInfo.name, history)
-    e.preventDefault()
   }
   return (
     <div className='container-fluid px-5'>

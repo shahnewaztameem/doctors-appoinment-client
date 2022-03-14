@@ -22,7 +22,7 @@ const InstantAppoinment = () => {
           {appointmentServiceInfo.map((info) => (
             <div>{info.description}</div>
           ))}
-          <button>Get Appoinment Now</button>
+          <button className='btn btn-primary mt-4'>Get Appoinment Now</button>
         </div>
         <div className='col-md-4'>
           <video

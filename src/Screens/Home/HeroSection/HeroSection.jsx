@@ -18,7 +18,7 @@ const HeroSection = () => {
           </h5>
 
           <Link to='/appoinment' className='nav-link ps-0'>
-            <button>Get An Appoinment</button>
+            <button className="btn btn-primary">Get An Appoinment</button>
           </Link>
         </div>
         <div className='col-md-5'>

@@ -8,9 +8,9 @@ const Navbar = () => {
   return (
     <div>
       <nav className='navbar navbar-expand-lg navbar-light'>
-        <a className='navbar-brand' href='#'>
+        <Link to="/" className='navbar-brand'>
           Doctor's Appoinment
-        </a>
+        </Link>
         <button
           className='navbar-toggler'
           type='button'
@@ -44,7 +44,7 @@ const Navbar = () => {
 
             <li className='nav-item'>
               {user?.email ? (
-                <button onClick={logout} className='nav-link'>
+                <button onClick={logout} className='nav-link btn btn-primary text-white'>
                   Logout
                 </button>
               ) : (

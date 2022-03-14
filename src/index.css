@@ -11,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.react-calendar {
+  width: 100% !important;
+  border: 2px solid rgb(113, 113, 236) !important;
+  border-radius: 5px !important;
+}
+
+.react-calendar__tile.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend {
+  color: #000 !important;
+}
+
+a {
+  text-decoration: none !important;
+}
